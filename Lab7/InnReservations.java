@@ -706,37 +706,31 @@ public class InnReservations {
         try(Connection conn = DriverManager.getConnection(System.getenv("HP_JDBC_URL"), 
         System.getenv("HP_JDBC_USER"), System.getenv("HP_JDBC_PW"))){
 
-            StringBuilder sb = new StringBuilder("select * from lab7_reservations where");
-            sb.append("(FirstName = ? or ? is null)");
-            sb.append("and (LastName = ? or ? is null)");
-            sb.append("and ((CheckIn between ? and ?) or ? is null)");
-            sb.append("and ((Checkout between ? and ?) or ? is null)");
-            sb.append("and (Room = ? or ? is null)");
-            sb.append("and (CODE = ? or ? is null)");
+            StringBuilder sb = new StringBuilder("select * from lab7_reservations where ");
+            sb.append("(FirstName = ? OR FirstName is not null) ");
+            sb.append("and (LastName = ? OR LastName is not null) ");
+            sb.append("and ((CheckIn between ? and ?) OR CheckIn is not null) ");
+            sb.append("and ((Checkout between ? and ?) OR Checkout is not null) ");
+            sb.append("and (Room = ? OR Room is not null) ");
+            sb.append("and (CODE = ? OR CODE is not null) ");
 
-            if(FirstName.isBlank()){FirstName = "%%";}
-            if(LastName.isBlank()){LastName = "%%";}
-            if(Range.isBlank()){Range = "%%";}
-            if(Range2.isBlank()){Range2 = "%%";}
-            if(RoomCode.isBlank()){RoomCode = "%%";}
-            if(Reserve.isBlank()){Reserve = "%%";}
+            // if(FirstName.isBlank()){FirstName = "ALL";}
+            // if(LastName.isBlank()){LastName = "ALL";}
+            // if(Range.isBlank()){Range = "ALL";}
+            // if(Range2.isBlank()){Range2 = "ALL";}
+            // if(RoomCode.isBlank()){RoomCode = "ALL";}
+            // if(Reserve.isBlank()){Reserve = "ALL";}
 
             String sql = sb.toString();
             try(PreparedStatement stmt = conn.prepareStatement(sql)){
                 stmt.setString(1, FirstName);
-                stmt.setString(2, FirstName);
-                stmt.setString(3, LastName);
-                stmt.setString(4, LastName);
+                stmt.setString(2, LastName);
+                stmt.setString(3, Range);
+                stmt.setString(4, Range2);
                 stmt.setString(5, Range);
                 stmt.setString(6, Range2);
-                stmt.setString(7, Range);
-                stmt.setString(8, Range);
-                stmt.setString(9, Range2);
-                stmt.setString(10, Range2);
-                stmt.setString(11, RoomCode);
-                stmt.setString(12, RoomCode);
-                stmt.setString(13, Reserve);
-                stmt.setString(14, Reserve);
+                stmt.setString(7, RoomCode);
+                stmt.setString(8, Reserve);
 
                 ResultSet rs = stmt.executeQuery();
 
